@@ -2,7 +2,9 @@
 
 A professional-grade, browser-based analog modeling synthesizer featuring authentic skeuomorphic design, drift-free step sequencing, and expressive Web Audio synthesis with full MIDI hardware integration.
 
-![Vintage Synth Interface](./public/assets/desktop-export.png)
+**[Launch Vintage Synth](https://analog-music-studio.pages.dev/)** | **[View on GitHub](https://github.com/Arthurs-excalibur/Analog-Music-Studio)**
+
+![Vintage Synth Interface](./preview.png)
 
 ## Overview
 
@@ -110,7 +112,9 @@ npm install
 npm run dev
 ```
 
-Open your browser at `http://localhost:3000`.
+Open your browser at `http://localhost:5173` (or the port shown in your terminal).
+
+Alternatively, visit the live deployment at [https://analog-music-studio.pages.dev/](https://analog-music-studio.pages.dev/)
 
 ### Running Tests
 
