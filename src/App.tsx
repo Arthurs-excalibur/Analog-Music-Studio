@@ -75,12 +75,17 @@ export default function App() {
     };
   }, []);
 
+  // Use transform: scale() with top-center origin so the board scales
+  // downward without clipping the header on small phone viewports.
   const zoomStyle: React.CSSProperties =
     instrumentScale < 1
       ? {
-          zoom: instrumentScale,
+          transform: `scale(${instrumentScale})`,
+          transformOrigin: 'top center',
           width: `${DESIGN_WIDTH}px`,
           minWidth: `${DESIGN_WIDTH}px`,
+          // Collapse the visual footprint so the outer container doesn't scroll
+          marginBottom: `-${Math.round(DESIGN_HEIGHT * (1 - instrumentScale))}px`,
         }
       : {
           width: '100%',
@@ -432,8 +437,17 @@ export default function App() {
     );
   }
 
+  // Top padding to visually center the scaled board within the viewport
+  const scaledH = Math.round(DESIGN_HEIGHT * instrumentScale);
+  const topPad = instrumentScale < 1
+    ? Math.max(0, Math.floor((window.innerHeight - scaledH) / 2))
+    : 4;
+
   return (
-    <div className={`w-screen h-screen max-w-screen max-h-screen ${pageBgClass} flex items-center justify-center p-1 md:p-2 overflow-hidden`}>
+    <div
+      className={`w-screen h-screen max-w-screen max-h-screen ${pageBgClass} flex items-start justify-center overflow-hidden`}
+      style={{ paddingTop: `${topPad}px` }}
+    >
       <div style={zoomStyle}>
         {/* Outer Chassis */}
         <div
