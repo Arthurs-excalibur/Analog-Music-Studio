@@ -4,7 +4,7 @@ A professional-grade analog modeling synthesizer running entirely in your browse
 
 **[Launch App](https://analog-music-studio.pages.dev/)** | **[GitHub](https://github.com/Arthurs-excalibur/Analog-Music-Studio)**
 
-![Vintage Synth](./preview.png)
+![Vintage Synth](./public/assets/Screenshot%202026-11-16%20191556.png)
 
 ## Features
 
