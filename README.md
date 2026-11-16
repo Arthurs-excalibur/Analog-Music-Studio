@@ -1,8 +1,7 @@
 # Analog Studio — Vintage Synth 2.0
 
 > An authentic, browser-based skeuomorphic virtual synthesizer built with React 19, TypeScript, Vite, Tailwind CSS, and the native Web Audio API.
-
-Based directly on the approved Figma hardware specifications (`Vintage Synth 2.0`, Node `0:1`).
+(`Vintage Synth 2.0`, Node `0:1`).
 
 ---
 
