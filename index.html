@@ -2,7 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Viewport: cover full screen, disable user zoom on touch devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+
+    <!-- PWA / iOS standalone mode — hides Safari chrome when added to Home Screen -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="VintSynth" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#121110" />
+
+    <!-- PWA manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
     <title>Vintage Synth 2.0 — Analog Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -10,9 +22,50 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <style>
+      /* Extend background into safe-area insets (iPhone notch / home bar) */
+      body { background-color: #121110; }
+      #root {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+      }
+    </style>
   </head>
-  <body class="bg-[#121110] text-[#c8b9a5] select-none antialiased min-h-screen">
+  <body class="bg-[#121110] text-[#c8b9a5] select-none antialiased min-h-screen overflow-hidden">
     <div id="root"></div>
+
+    <script>
+      // iOS Safari toolbar-hide trick:
+      // On landscape orientation change, briefly scroll down then back
+      // so Safari collapses its address bar / toolbar automatically.
+      (function () {
+        var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+        function tryHideToolbar() {
+          if (!isIOS) return;
+          // Only attempt in landscape
+          var landscape = window.innerWidth > window.innerHeight;
+          if (!landscape) return;
+          // Temporarily make body taller than viewport so scroll is possible
+          document.body.style.height = (window.innerHeight + 1) + 'px';
+          window.scrollTo(0, 1);
+          setTimeout(function () {
+            window.scrollTo(0, 0);
+            document.body.style.height = '';
+          }, 50);
+        }
+        window.addEventListener('orientationchange', function () {
+          setTimeout(tryHideToolbar, 400); // wait for rotation to settle
+        });
+        // Also fire once on load in case user opens in landscape
+        window.addEventListener('load', function () {
+          setTimeout(tryHideToolbar, 600);
+        });
+      })();
+    </script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
