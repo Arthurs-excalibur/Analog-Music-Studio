@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 
 export function isViewportBlocked(width: number, height: number): boolean {
   if (width <= 0 || height <= 0) return false;
-  // 1. Portrait orientation
+  // 1. Portrait orientation (width < height)
   if (width < height) return true;
-  // 2. Insufficient landscape width
-  if (width < 680) return true;
-  // 3. Insufficient landscape height
-  if (height < 400) return true;
+  // 2. Insufficient landscape width (< 560px, e.g. micro viewports/smartwatches)
+  if (width < 560) return true;
+  // 3. Insufficient landscape height (< 260px)
+  if (height < 260) return true;
   return false;
 }
 
@@ -35,13 +35,24 @@ export function useOrientationGate(): { isBlocked: boolean; width: number; heigh
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
-    window.addEventListener('orientationchange', handleResize, { passive: true });
+    window.addEventListener('orientationchange', () => {
+      handleResize();
+      // On iOS Safari, dimensions often settle 150-350ms after orientationchange
+      setTimeout(handleResize, 150);
+      setTimeout(handleResize, 350);
+    }, { passive: true });
+
+    window.visualViewport?.addEventListener('resize', handleResize);
 
     // Also listen to matchMedia orientation changes
     let mql: MediaQueryList | null = null;
     try {
       mql = window.matchMedia('(orientation: portrait)');
-      mql.addEventListener('change', handleResize);
+      mql.addEventListener('change', () => {
+        handleResize();
+        setTimeout(handleResize, 150);
+        setTimeout(handleResize, 350);
+      });
     } catch {
       // ignore older environments
     }
@@ -51,7 +62,7 @@ export function useOrientationGate(): { isBlocked: boolean; width: number; heigh
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', handleResize);
+      window.visualViewport?.removeEventListener('resize', handleResize);
       if (mql) {
         mql.removeEventListener('change', handleResize);
       }
@@ -195,7 +206,7 @@ export const OrientationGate: React.FC<OrientationGateProps> = ({ width, height 
             </div>
             <div className="flex items-center justify-between text-[#c8b9a5]/60 pt-0.5">
               <span>REQUIRED:</span>
-              <span className="text-[#c8b9a5]">LANDSCAPE (≥ 680 × 400 PX)</span>
+              <span className="text-[#c8b9a5]">LANDSCAPE (≥ 560 × 260 PX)</span>
             </div>
             {width !== undefined && height !== undefined && width > 0 && (
               <div className="flex items-center justify-between text-[#c8b9a5]/40 text-[9px] pt-0.5">

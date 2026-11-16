@@ -24,21 +24,32 @@ describe('Orientation Gate & Usable Viewport Validation', () => {
     expect(isViewportBlocked(1024, 1366)).toBe(true);
   });
 
-  it('blocks landscape viewports with insufficient height (< 400px)', () => {
-    // Landscape phone with short usable height (e.g. mobile browser address bar / notch)
-    expect(isViewportBlocked(844, 390)).toBe(true);
-    expect(isViewportBlocked(800, 360)).toBe(true);
-    expect(isViewportBlocked(900, 399)).toBe(true);
+  it('blocks landscape viewports with insufficient height (< 260px)', () => {
+    // Micro viewports / smartwatches
+    expect(isViewportBlocked(580, 240)).toBe(true);
+    expect(isViewportBlocked(600, 259)).toBe(true);
   });
 
-  it('blocks viewports with insufficient width (< 680px)', () => {
-    expect(isViewportBlocked(679, 450)).toBe(true);
-    expect(isViewportBlocked(500, 420)).toBe(true);
+  it('blocks viewports with insufficient width (< 560px)', () => {
+    expect(isViewportBlocked(559, 320)).toBe(true);
+    expect(isViewportBlocked(480, 300)).toBe(true);
   });
 
-  it('allows landscape viewports meeting both width >= 680 and height >= 400', () => {
-    // Exact threshold
-    expect(isViewportBlocked(680, 400)).toBe(false);
+  it('allows real landscape smartphones and tablets', () => {
+    // iPhone SE landscape: 667 x 375
+    expect(isViewportBlocked(667, 375)).toBe(false);
+
+    // iPhone 12/13/14 landscape: 844 x 390
+    expect(isViewportBlocked(844, 390)).toBe(false);
+
+    // iPhone with active Safari browser chrome (e.g. 844 x 330)
+    expect(isViewportBlocked(844, 330)).toBe(false);
+
+    // Samsung Galaxy landscape: 800 x 360
+    expect(isViewportBlocked(800, 360)).toBe(false);
+
+    // Exact minimum threshold
+    expect(isViewportBlocked(560, 260)).toBe(false);
 
     // Modern landscape phone with generous viewport
     expect(isViewportBlocked(915, 412)).toBe(false);
