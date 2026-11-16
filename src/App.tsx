@@ -121,6 +121,7 @@ export default function App() {
 
   // Dialog states
   const [isPresetBrowserOpen, setIsPresetBrowserOpen] = useState<boolean>(false);
+  const [presetCategoryFilter, setPresetCategoryFilter] = useState<'ALL' | 'Lead' | 'Bass' | 'Pad' | 'Pluck' | 'FX'>('ALL');
   const [isSaveModalOpen, setIsSaveModalOpen] = useState<boolean>(false);
   const [newPresetName, setNewPresetName] = useState<string>('');
   const presetFileInputRef = useRef<HTMLInputElement>(null);
@@ -1052,7 +1053,7 @@ export default function App() {
           <div className="w-full max-w-md rounded bg-[#1f1d1b] border-2 border-[#3f3f46] shadow-2xl p-5 flex flex-col gap-4">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
               <h3 className="text-sm font-bold tracking-wider text-[#c8b9a5] uppercase">
-                PRESET SOUND BANKS
+                PRESET SOUND BANKS ({presets.length})
               </h3>
               <button
                 type="button"
@@ -1063,8 +1064,33 @@ export default function App() {
               </button>
             </div>
 
+            {/* Category Filter Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px]">
+              {(['ALL', 'Lead', 'Bass', 'Pad', 'Pluck', 'FX'] as const).map((cat) => {
+                const count = cat === 'ALL' ? presets.length : presets.filter((p) => p.category === cat).length;
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => setPresetCategoryFilter(cat)}
+                    className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase transition-all cursor-pointer whitespace-nowrap flex items-center gap-1 ${
+                      presetCategoryFilter === cat
+                        ? 'bg-[#e6a34a] text-black border border-[#e6a34a] font-black'
+                        : 'bg-[#27272a] text-[#c8b9a5]/70 border border-[#3f3f46] hover:text-white'
+                    }`}
+                  >
+                    <span>{cat}</span>
+                    <span className="opacity-60 text-[9px]">({count})</span>
+                  </button>
+                );
+              })}
+            </div>
+
             <div className="max-h-72 overflow-y-auto flex flex-col gap-2 pr-1">
-              {presets.map((p, idx) => {
+              {(presetCategoryFilter === 'ALL'
+                ? presets
+                : presets.filter((p) => p.category === presetCategoryFilter)
+              ).map((p, idx) => {
                 const isSelected = p.id === currentPresetId;
                 return (
                   <div
