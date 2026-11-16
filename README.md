@@ -2,7 +2,7 @@
 
 A professional-grade analog modeling synthesizer running entirely in your browser. Built with React 19, TypeScript, and Web Audio API.
 
-**[Launch App](https://analog-music-studio.pages.dev/)** | **[GitHub](https://github.com/Arthurs-excalibur/Analog-Music-Studio)**
+**[Launch App](https://analog-music-studio.pages.dev/)** | **[Figma](https://www.figma.com/design/tWFoyi2T6RliyeZB5HChyZ/Analog-Music-Studio?node-id=0-1&t=Jf6E2raS86NTA7B4-1)**
 
 ![Vintage Synth](./public/assets/Screenshot%202026-11-16%20191556.png)
 
