@@ -46,32 +46,32 @@ export default function App() {
   const { isBlocked: isOrientationBlocked, width: viewportWidth, height: viewportHeight } = useOrientationGate();
 
   // Scale the entire instrument to fit any viewport width proportionally.
-  // Renders at DESIGN_WIDTH then CSS zoom shrinks it uniformly — no layout reflowing.
+  // DESIGN_HEIGHT reflects the true rendered board height (chassis p-2 + all sections).
+  // We use visualViewport height when available so mobile browser chrome is excluded.
   const DESIGN_WIDTH = 1260;
-  const DESIGN_HEIGHT = 630;
+  const DESIGN_HEIGHT = 760; // true board height incl. chassis padding/border
 
-  const [instrumentScale, setInstrumentScale] = useState(() => {
+  const getScale = () => {
     if (typeof window === 'undefined') return 1;
-    const availW = window.innerWidth - 16;
-    const availH = window.innerHeight - 16;
+    const vvh = window.visualViewport?.height ?? window.innerHeight;
+    const availW = window.innerWidth - 8;
+    const availH = vvh - 8;
     const scaleX = availW / DESIGN_WIDTH;
     const scaleY = availH / DESIGN_HEIGHT;
-    return Math.max(0.35, Math.min(1, Math.min(scaleX, scaleY)));
-  });
+    return Math.max(0.3, Math.min(1, Math.min(scaleX, scaleY)));
+  };
+
+  const [instrumentScale, setInstrumentScale] = useState(getScale);
 
   useEffect(() => {
-    const updateScale = () => {
-      const availW = window.innerWidth - 16;
-      const availH = window.innerHeight - 16;
-      const scaleX = availW / DESIGN_WIDTH;
-      const scaleY = availH / DESIGN_HEIGHT;
-      setInstrumentScale(Math.max(0.35, Math.min(1, Math.min(scaleX, scaleY))));
-    };
+    const updateScale = () => setInstrumentScale(getScale());
     window.addEventListener('resize', updateScale, { passive: true });
     window.addEventListener('orientationchange', updateScale, { passive: true });
+    window.visualViewport?.addEventListener('resize', updateScale);
     return () => {
       window.removeEventListener('resize', updateScale);
       window.removeEventListener('orientationchange', updateScale);
+      window.visualViewport?.removeEventListener('resize', updateScale);
     };
   }, []);
 
@@ -438,9 +438,10 @@ export default function App() {
   }
 
   // Top padding to visually center the scaled board within the viewport
+  const vvh = (typeof window !== 'undefined' ? window.visualViewport?.height ?? window.innerHeight : 600);
   const scaledH = Math.round(DESIGN_HEIGHT * instrumentScale);
   const topPad = instrumentScale < 1
-    ? Math.max(0, Math.floor((window.innerHeight - scaledH) / 2))
+    ? Math.max(0, Math.floor((vvh - scaledH) / 2))
     : 4;
 
   return (
