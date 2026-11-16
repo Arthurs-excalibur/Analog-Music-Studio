@@ -1,5 +1,5 @@
 {
-  "name": "Vintage Synth 2.0",
+  "name": "Vintage Synth",
   "short_name": "VintSynth",
   "description": "Analog Music Studio — Vintage Synthesizer",
   "start_url": "/",
@@ -8,6 +8,12 @@
   "background_color": "#121110",
   "theme_color": "#121110",
   "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
     {
       "src": "/assets/icon-192.png",
       "sizes": "192x192",

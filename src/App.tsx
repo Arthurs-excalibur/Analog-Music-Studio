@@ -510,7 +510,7 @@ export default function App() {
             <div className="shrink-0">
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl md:text-3xl font-black tracking-[-1.5px] uppercase text-[#c8b9a5] engraved-text leading-tight">
-                  VINTAGE SYNTH 2.0
+                  VINTAGE SYNTH
                 </h1>
                 {/* Accent Lighting LED */}
                 <span
